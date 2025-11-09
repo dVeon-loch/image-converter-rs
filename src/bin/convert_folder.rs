@@ -1,12 +1,12 @@
 use eyre::ContextCompat;
 use image::ImageFormat;
 use image_converter_rs::{collect_image_files, convert_image};
-use std::{env, path::PathBuf, str::FromStr};
+use std::{env, fs, path::PathBuf, str::FromStr};
 
 fn main() -> eyre::Result<()> {
     let args: Vec<String> = env::args().collect();
 
-    if args.len() != 3 {
+    if args.len() != 4 {
         eprintln!(
             "Usage: {} <input folder> <output folder> <output type>",
             args[0]
@@ -18,6 +18,8 @@ fn main() -> eyre::Result<()> {
     let input_folder = PathBuf::from_str(&args[1])?;
     let output_folder = PathBuf::from_str(&args[2])?;
     let output_extension = &args[3];
+
+    fs::create_dir_all(&output_folder)?;
 
     let output_format =
         ImageFormat::from_extension(output_extension).wrap_err("Error parsing output extension")?;
@@ -42,7 +44,6 @@ fn main() -> eyre::Result<()> {
             ),
             Err(e) => {
                 eprintln!("Error: {}", e);
-                std::process::exit(1);
             }
         }
     }

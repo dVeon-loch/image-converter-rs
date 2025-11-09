@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use eyre::Context;
 use image::ImageFormat;
 use walkdir::WalkDir;
 
@@ -7,9 +8,11 @@ pub fn convert_image(
     input_path: impl AsRef<Path>,
     output_path: impl AsRef<Path>,
     image_format: ImageFormat,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> eyre::Result<()> {
     let img = image::open(input_path)?;
-    img.save_with_format(output_path, image_format)?;
+    img.save_with_format(output_path, image_format)
+        .wrap_err("Error saving image to new format")?;
+
     Ok(())
 }
 
