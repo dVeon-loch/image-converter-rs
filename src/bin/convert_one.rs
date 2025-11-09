@@ -1,5 +1,6 @@
 use eyre::ContextCompat;
 use image::ImageFormat;
+use image_converter_rs::convert_image;
 use std::env;
 
 fn main() -> eyre::Result<()> {
@@ -28,15 +29,5 @@ fn main() -> eyre::Result<()> {
         }
     }
 
-    Ok(())
-}
-
-fn convert_image(
-    input_path: &str,
-    output_path: &str,
-    image_format: ImageFormat,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let img = image::open(input_path)?;
-    img.save_with_format(output_path, image_format)?;
     Ok(())
 }
